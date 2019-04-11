@@ -11,6 +11,11 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { ComponentsModule } from './components/components.module';
 
+import { HttpClientModule } from '@angular/common/http';
+
+import { SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
+
+const config: SocketIoConfig = {url: 'http://localhost:5000/', options: {}};
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,7 +24,9 @@ import { ComponentsModule } from './components/components.module';
     BrowserModule,
     IonicModule.forRoot(),
     ComponentsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    SocketIoModule.forRoot( config )
   ],
   providers: [
     StatusBar,
