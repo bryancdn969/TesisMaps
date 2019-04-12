@@ -36,10 +36,33 @@ export class MapaComponent implements OnInit {
 
   escucharSockets() {
     // marcador-nuevo
+    this.wsService.listen('marcador-nuevo')
+    .subscribe( (marcador: Lugar) => {
+      this.agregarMarcador( marcador );
+    });
 
     // marcador-mover
+    this.wsService.listen('marcador-mover')
+    .subscribe( ( marcador: Lugar ) => {
+      for ( const i in this.marcadores ) {
+        if ( this.marcadores[i].getTitle() === marcador.id) {
+          const latLng = new google.maps.LatLng( marcador.lat, marcador.lng);
+          this.marcadores[i].setPosition( latLng );
+          break;
+        }
+      }
+    });
 
     // marcador-borrar
+    this.wsService.listen('marcador-borrar')
+    .subscribe( (id: string) => {
+      for ( const i in this.marcadores) {
+        if (this.marcadores[i].getTitle() === id) {
+          this.marcadores[i].setMap( null );
+          break;
+        }
+      }
+    });
   }
 
   cargarMapa() {
@@ -65,6 +88,7 @@ export class MapaComponent implements OnInit {
       this.agregarMarcador( nuevoMarcador );
 
       // emitir evento socket agregar marcador
+      this.wsService.emit('marcador-nuevo', nuevoMarcador);
     } );
 
     for ( const lugar of this.lugares) {
@@ -105,6 +129,8 @@ export class MapaComponent implements OnInit {
 
       marker.setMap( null );
       // Dispararun evento de socket para borrar el marcador
+      this.wsService.emit( 'marcador-borrar', marcador.id );
+
     } );
 
     google.maps.event.addDomListener( marker, 'drag', (coors) => {
@@ -113,11 +139,12 @@ export class MapaComponent implements OnInit {
         lat: coors.latLng.lat(),
         lng: coors.latLng.lng(),
         nombre: marcador.nombre,
-        title: marcador.id
+        id: marcador.id
       };
 
-      console.log( nuevoMarcador );
       // Dispararun evento de socket para mover el marker
+
+      this.wsService.emit( 'marcador-mover', nuevoMarcador );
     } );
 
   }
