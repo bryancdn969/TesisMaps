@@ -6,6 +6,8 @@ import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
 
+import { Geolocation } from '@ionic-native/geolocation';
+
 @NgModule({
   imports: [
     CommonModule,

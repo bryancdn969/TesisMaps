@@ -12,14 +12,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { ComponentsModule } from './components/components.module';
 
 import { HttpClientModule } from '@angular/common/http';
-
 import { SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
+
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 const config: SocketIoConfig = {url: 'http://localhost:5000/', options: {}};
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [
+    AppComponent
+  ],
+  entryComponents: [  ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -31,7 +34,8 @@ const config: SocketIoConfig = {url: 'http://localhost:5000/', options: {}};
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    Geolocation
   ],
   bootstrap: [AppComponent]
 })
